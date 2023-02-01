@@ -115,7 +115,7 @@ if __name__ == "__main__":
             pcd = o3d.io.read_point_cloud(pcd_path)
             o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
-        lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\crop" + str(i+1) + ".pcd"
+        lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\cropped_" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
         point_cloud = o3d.io.read_point_cloud(lidar_path)
         pc_as_np = np.asarray(point_cloud.points)
