@@ -74,7 +74,7 @@ def project_p(path, img, rvecs, tvecs):
         #     i += 1
         #     continue
 
-        # todo 为什么这个对显示效果影响这么大？？？
+       
         #if int(e[0][0]) > img.shape[1] or int(e[0][1]) > img.shape[0] or int(e[0][0])<0 or int(e[0][1])<0:
             #continue
 
@@ -84,7 +84,7 @@ def project_p(path, img, rvecs, tvecs):
                          # color=(int(points[i,3]), 255-int(points[i,3]), 255-int(points[i,3])),
                          # color=(int(points[i,3]), int(points[i,3]), 0),
                          #color=(int(points[i, 3]), int(points[i, 3]), 0),
-                         thickness=2)
+                         thickness=1)
 
         i += 1
 
@@ -98,56 +98,57 @@ if __name__ == "__main__":
     f1.sort()
     f2 = os.listdir("D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/")
     f2.sort()
+    cropped_flag = True # set True to edit the pointcloud,and please save the cropped point cloud as .pcd format!
     for i in range(len(f1)):
         img_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/" + f1[i]
         pcd_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/" + f2[i]
         img=cv2.imread(img_path)
         # 主要功能是截取点云
-        pcd = o3d.io.read_point_cloud(pcd_path)
-        o3d.visualization.draw_geometries_with_editing([pcd])
+        if cropped_flag == True:
+            pcd = o3d.io.read_point_cloud(pcd_path)
+            o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
         lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\crop" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
         point_cloud = o3d.io.read_point_cloud(lidar_path)
         pc_as_np = np.asarray(point_cloud.points)
-        #time.sleep(5)
         # 对截取后的点云进行平面拟合
         plane_model, inliers = point_cloud.segment_plane(distance_threshold=0.005,
                                                          ransac_n=5,
                                                          num_iterations=50)
         [a, b, c, d] = plane_model
-        print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
+        #print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
         inlier_cloud = point_cloud.select_by_index(inliers)
-        inlier_cloud.paint_uniform_color([1.0, 0, 0])
-        o3d.visualization.draw_geometries([inlier_cloud])
+        center= o3d.geometry.PointCloud()
+        cen_cor = inlier_cloud.get_center()#center points
+        center.points = o3d.utility.Vector3dVector([cen_cor])
+        center.paint_uniform_color([0, 0, 0])
+        o3d.visualization.draw_geometries([inlier_cloud,center], str(f2[i]), 1080, 720, 400, 200)
         # 对截取后的点云选取点云中心点
-        print(inlier_cloud.get_center())
         # 对截取后的点云选取4个角点
         # 提取图片中标定板的角点
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (10, 9), None)
-        print('四个角点坐标分别为：')
-        print(corners[0])
-        print(corners[9])
-        print(corners[80])
-        print(corners[89])
-        print('中心坐标分别为：')
+        print('The coordinates of the four corners of the picture：')
+        #print(corners[0],corners[9],corners[80],corners[89])
+        #print('img center coordinates：')
         corner = (corners[0]+corners[9]+corners[80]+corners[89]) / 4
         print(corner)
         # 添加点云标定板中心点坐标
         lidar_points.append(inlier_cloud.get_center())
-        print("lidar_points ", lidar_points)
+        print("lidar center coordinates: ", lidar_points)
         # 添加图像标定板中心点坐标
         img_points.append(corner)
         #在图片中显示中心点
-        cv2.circle(img, (int(corner[0][0]),int(corner[0][1])), 1, (0, 0, 255), thickness=-1)
-        cv2.imshow("image", img)
-        print("img_points ", img_points)
+        #cv2.circle(img, (int(corner[0][0]),int(corner[0][1])), 1, (0, 0, 255), thickness=-1)
+        #cv2.imshow("image", img)
+        #print("img_points ", img_points)
 
         if ret == True:
             cv2.drawChessboardCorners(img, (10, 9), corners, ret)
-            #plt.imshow(img)
-            #plt.show()
+            plt.figure(str(f1[i]))
+            plt.imshow(img)
+            plt.show()
         else:
             print('未找到角点')
         # 提取图片中标定板的中心点
