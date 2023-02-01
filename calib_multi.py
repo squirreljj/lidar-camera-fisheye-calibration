@@ -19,7 +19,7 @@ def calib():
                               [0., 0., 1.]], dtype=np.float64
                              )
     #相机畸变参数
-    dist_coeffs = np.array([[0],[0],[-0.003294336117104848],[0.0003341737432437223],[0],[0]],dtype=np.float64)
+    dist_coeffs = np.array([[0],[0],[0],[0]], dtype=np.float64)
 
     points3 = np.array(lidar_points, dtype=np.float64)
     points2 = np.array(img_points, dtype=np.float64)
@@ -52,7 +52,7 @@ def project_p(path, img, rvecs, tvecs):
                               [0., 323.5287974917168, 559.7227279061037],
                               [0., 0., 1.]], dtype=np.float64
                              )
-    dist_coeffs = np.array([[0],[0],[0],[0]],dtype=np.float64)
+    dist_coeffs = np.array([[0],[0],[0],[0]], dtype=np.float64)
 
     print("->正在加载点云... ")
     point_cloud = o3d.io.read_point_cloud(path)
@@ -74,9 +74,9 @@ def project_p(path, img, rvecs, tvecs):
         #     i += 1
         #     continue
 
-        
-        if int(e[0][0]) > img.shape[1] or int(e[0][1]) > img.shape[0] or int(e[0][0])<0 or int(e[0][1])<0:
-            continue
+        # todo 为什么这个对显示效果影响这么大？？？
+        #if int(e[0][0]) > img.shape[1] or int(e[0][1]) > img.shape[0] or int(e[0][0])<0 or int(e[0][1])<0:
+            #continue
 
         # print(int(e[0][0]), int(e[0][1]),int(points[i,3]))
         img = cv2.circle(img, center=(int(e[0][0]), int(e[0][1])),
@@ -94,28 +94,23 @@ def project_p(path, img, rvecs, tvecs):
 
 
 if __name__ == "__main__":
-    f1 = os.listdir("D:/fisheye+disparity2pointcloud/calib_data/img/")
+    f1 = os.listdir("D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/")
     f1.sort()
-    f2 = os.listdir("D:/fisheye+disparity2pointcloud/calib_data/pcd/")
+    f2 = os.listdir("D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/")
     f2.sort()
-    cropped_flag=False
-    num=1        #adjust the time you need to crop the pointcloud
-    #set True to edit the pointcloud,and please save the cropped point cloud as .pcd format!
     for i in range(len(f1)):
-        img_path = "D:/fisheye+disparity2pointcloud/calib_data/img/" + f1[i]
-        pcd_path = "D:/fisheye+disparity2pointcloud/calib_data/pcd/" + f2[i]
+        img_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/" + f1[i]
+        pcd_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/" + f2[i]
         img=cv2.imread(img_path)
         # 主要功能是截取点云
-        if cropped_flag==True:
-            for a in range(num):
-                pcd = o3d.io.read_point_cloud(pcd_path)#if multi crop is chosen,save pointcloud as origin name  before the last cut out ,save it as crop1.pcd/crop2.pcd... at the last cut out 
-                o3d.visualization.draw_geometries_with_editing([pcd])
+        pcd = o3d.io.read_point_cloud(pcd_path)
+        o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
-        lidar_path = r"D:\fisheye+disparity2pointcloud\crop" + str(i+1) + ".pcd"
+        lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\crop" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
         point_cloud = o3d.io.read_point_cloud(lidar_path)
         pc_as_np = np.asarray(point_cloud.points)
-        time.sleep(5)
+        #time.sleep(5)
         # 对截取后的点云进行平面拟合
         plane_model, inliers = point_cloud.segment_plane(distance_threshold=0.005,
                                                          ransac_n=5,
@@ -137,24 +132,27 @@ if __name__ == "__main__":
         print(corners[80])
         print(corners[89])
         print('中心坐标分别为：')
-        corner = (corners[0] + corners[9] + corners[80] + corners[89]) / 4
+        corner = (corners[0]+corners[9]+corners[80]+corners[89]) / 4
         print(corner)
         # 添加点云标定板中心点坐标
         lidar_points.append(inlier_cloud.get_center())
         print("lidar_points ", lidar_points)
         # 添加图像标定板中心点坐标
         img_points.append(corner)
+        #在图片中显示中心点
+        cv2.circle(img, (int(corner[0][0]),int(corner[0][1])), 1, (0, 0, 255), thickness=-1)
+        cv2.imshow("image", img)
         print("img_points ", img_points)
 
         if ret == True:
             cv2.drawChessboardCorners(img, (10, 9), corners, ret)
-            plt.imshow(img)
-            plt.show()
+            #plt.imshow(img)
+            #plt.show()
         else:
             print('未找到角点')
         # 提取图片中标定板的中心点
     rr, tt = calib()
-    test_lidar_path = r"D:\fisheye+disparity2pointcloud\calib_data\pcd\fishe1.pcd"
-    test_img=cv2.imread(r"D:\fisheye+disparity2pointcloud\calib_data\img\fisheye1.jpg")
-    project_p(lidar_path, test_img, rr, tt)
+    test_lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\calib_data\pcd\fishe3.pcd"
+    test_img=cv2.imread(r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\calib_data\img\fisheye3.jpg")
+    project_p(test_lidar_path, test_img, rr, tt)
 
