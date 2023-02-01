@@ -3,8 +3,9 @@
 
 This calibration code is based on pnp algorithm.
 
-Our algorithm support calibration between (fisheye/pinhole)camera and lidar 
+Our algorithm support calibration between (fisheye/pinhole)camera and lidar.
 
+## Solid_state lidar is highly recommened,and do not move the devices until data record is done. (enough sample has been collected.The num of sample better >=5)
 We give two way to calibrate lidar and camera:
 
 ## 1)calib.py
@@ -30,8 +31,11 @@ Pcd should be save as:
 
 Set `cropped_flag = True`if your pointcloud haven't been processed,and then you can crop chessboard in pointcloud.
 
+
+
 Set `cropped_flag = False`to skip the pointcloud isolation and directly calibrate.(**PS:make sure chessboard pointcloud is ready**)
 
+## Isolated the chessboard pointcloud as perfect as you can,a perfect pointcloud means a perfect calibration.
 
 <div align=center><img width="300" height="350" src="https://user-images.githubusercontent.com/42079541/215991733-24545882-e0b1-450d-afca-48dea7570139.png"/></div>
 
@@ -51,8 +55,8 @@ For different camera model, just change distortion vector https://github.com/squ
 `np.array([[k1],[k2],[p1],[p2][k3],[0],[0].[0]])`for PINHOLE
 
 
-# result
-below is reprojection result:
+# Reprojection
+The image below shows the reprojection result：
 
 <div align=center><img width="800" height="800" src="https://user-images.githubusercontent.com/42079541/215985248-4bf2c664-d873-4305-9ffa-f648a70e0dae.jpg"/></div>
 <div align=center><img width="800" height="800" src="https://user-images.githubusercontent.com/42079541/215985271-ee6b5226-3661-4491-8e12-14ca817a19e7.jpg"/></div>
