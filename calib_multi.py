@@ -73,19 +73,45 @@ def project_p(path, img, rvecs, tvecs):
         # if i%2 == 0:
         #     i += 1
         #     continue
-
-       
+        # todo 为什么这个对显示效果影响这么大？？？
         #if int(e[0][0]) > img.shape[1] or int(e[0][1]) > img.shape[0] or int(e[0][0])<0 or int(e[0][1])<0:
             #continue
 
         # print(int(e[0][0]), int(e[0][1]),int(points[i,3]))
+        distance=math.sqrt(pc_as_np[i][0]*pc_as_np[i][0]+pc_as_np[i][1]*pc_as_np[i][1]+pc_as_np[i][2]*pc_as_np[i][2])
+        inc = 6.0 / 10;
+        x =  distance* inc;
+        r = 0.0;
+        g = 0.0;
+        b = 0.0
+        if ((0 <= x and x <= 1) or (5 <= x and x <= 6)):
+            r = 1.0
+        elif (4 <= x and x <= 5):
+            r = x - 4
+        elif (1 <= x and x <= 2):
+            r = 1.0 - (x - 1)
+        if (1 <= x and x <= 3):
+            g = 1.0
+        elif (0 <= x and x <= 1):
+            g = x - 0
+        elif (3 <= x and x <= 4):
+            g = 1.0 - (x - 3)
+        if (3 <= x and x <= 5):
+            b = 1.0
+        elif (2 <= x and x <= 3):
+            b = x - 2;
+        elif (5 <= x and x <= 6):
+            b = 1.0 - (x - 5)
+        r *= 255.0
+        g *= 255.0
+        b *= 255.0
         img = cv2.circle(img, center=(int(e[0][0]), int(e[0][1])),
-                         radius=1,color=(205, 0, 0),
-                         # color=(int(points[i,3]), 255-int(points[i,3]), 255-int(points[i,3])),
+                         radius=1,
+                         # color=(205, 0, 0),
+                         color=(int(r),int(g) , int(b)),
                          # color=(int(points[i,3]), int(points[i,3]), 0),
-                         #color=(int(points[i, 3]), int(points[i, 3]), 0),
-                         thickness=1)
-
+                         #color=(int(pc_as_np[i][0]), int(pc_as_np[i][1]), int(pc_as_np[i][2])),
+                         thickness=-1)
         i += 1
 
     cv2.imshow('line0', img)
