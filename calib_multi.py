@@ -19,7 +19,7 @@ def calib():
                               [0., 0., 1.]], dtype=np.float64
                              )
     #相机畸变参数
-    dist_coeffs = np.array([[0],[0],[-0.003294336117104848],[0.0003341737432437223],[0],[0]])
+    dist_coeffs = np.array([[0],[0],[-0.003294336117104848],[0.0003341737432437223],[0],[0]],dtype=np.float64)
 
     points3 = np.array(lidar_points, dtype=np.float64)
     points2 = np.array(img_points, dtype=np.float64)
@@ -52,7 +52,7 @@ def project_p(path, img, rvecs, tvecs):
                               [0., 323.5287974917168, 559.7227279061037],
                               [0., 0., 1.]], dtype=np.float64
                              )
-    dist_coeffs = np.array([[0],[0],[0],[0]])
+    dist_coeffs = np.array([[0],[0],[0],[0]],dtype=np.float64)
 
     print("->正在加载点云... ")
     point_cloud = o3d.io.read_point_cloud(path)
