@@ -57,13 +57,9 @@ For different camera model, just change distortion vector https://github.com/squ
 # Quick start
 You can verify that this repository runs sucessfully by running this package on our provided quick-start data. 
 
-Folder
-<calib >for calib.py
+Folder `calib `for calib.py
 
-Folder
->calib_multi 
-
-for calib_multi.py
+Folder `calib_multi `for calib_multi.py
 
 # Reprojection
 The image below shows the reprojection result：
