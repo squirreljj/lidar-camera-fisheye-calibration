@@ -5,7 +5,7 @@ This calibration code is based on pnp algorithm.
 
 Our algorithm support calibration between (fisheye/pinhole)camera and lidar.
 
-## Solid_state lidar is highly recommened,and do not move the devices until data record is done. (enough sample has been collected.The num of sample better >=5)
+## Solid_state lidar is highly recommened,and do not move the devices until all data is recored. (enough sample has been collected.The num of sample better >=5)
 We give two way to calibrate lidar and camera:
 
 ## 1)calib.py
