@@ -94,14 +94,17 @@ def project_p(path, img, rvecs, tvecs):
 
 
 if __name__ == "__main__":
-    f1 = os.listdir("D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/")
+    img_dir="D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/"
+    pcd_dir="D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/"
+    crop_pcd_dir="D:/fisheye+disparity2pointcloud/lidar_camera_calib/"
+    f1 = os.listdir(img_dir)
     f1.sort()
-    f2 = os.listdir("D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/")
+    f2 = os.listdir(pcd_dir)
     f2.sort()
     cropped_flag = True # set True to edit the pointcloud,and please save the cropped point cloud as .pcd format!
     for i in range(len(f1)):
-        img_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/img/" + f1[i]
-        pcd_path = "D:/fisheye+disparity2pointcloud/lidar_camera_calib/calib_data/pcd/" + f2[i]
+        img_path = img_dir + f1[i]
+        pcd_path = pcd_dir + f2[i]
         img=cv2.imread(img_path)
         # 主要功能是截取点云
         if cropped_flag == True:
@@ -115,7 +118,7 @@ if __name__ == "__main__":
             pcd = o3d.io.read_point_cloud(pcd_path)
             o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
-        lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\cropped_" + str(i+1) + ".pcd"
+        lidar_path = crop_pcd_dir+"cropped_" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
         point_cloud = o3d.io.read_point_cloud(lidar_path)
         pc_as_np = np.asarray(point_cloud.points)
@@ -160,7 +163,9 @@ if __name__ == "__main__":
             print('未找到角点')
         # 提取图片中标定板的中心点
     rr, tt = calib()
-    test_lidar_path = r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\calib_data\pcd\fishe3.pcd"
-    test_img=cv2.imread(r"D:\fisheye+disparity2pointcloud\lidar_camera_calib\calib_data\img\fisheye3.jpg")
-    project_p(test_lidar_path, test_img, rr, tt)
+    for i in range(len(f1)):
+        img_path = img_dir + f1[i]
+        test_lidar_path = pcd_dir + f2[i]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt)
 
