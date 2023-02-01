@@ -54,6 +54,16 @@ For different camera model, just change distortion vector https://github.com/squ
 
 `np.array([[k1],[k2],[p1],[p2][k3],[0],[0].[0]])`for PINHOLE
 
+# Quick start
+You can verify that this repository runs sucessfully by running this package on our provided quick-start data. 
+
+Folder
+<calib >for calib.py
+
+Folder
+>calib_multi 
+
+for calib_multi.py
 
 # Reprojection
 The image below shows the reprojection result：
@@ -61,4 +71,3 @@ The image below shows the reprojection result：
 <div align=center><img width="800" height="800" src="https://user-images.githubusercontent.com/42079541/215985248-4bf2c664-d873-4305-9ffa-f648a70e0dae.jpg"/></div>
 <div align=center><img width="800" height="800" src="https://user-images.githubusercontent.com/42079541/215985271-ee6b5226-3661-4491-8e12-14ca817a19e7.jpg"/></div>
 <div align=center><img width="800" height="800" src="https://user-images.githubusercontent.com/42079541/215974353-62d38da0-fd00-4ffc-a2e1-32b5e34a3290.png"/></div>
-
