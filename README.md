@@ -33,9 +33,10 @@ Set `cropped_flag = True`if your pointcloud haven't been processed,and then you 
 Set `cropped_flag = False`to skip the pointcloud isolation and directly calibrate.(**PS:make sure chessboard pointcloud is ready**)
 
 
-
 <div align=center><img width="300" height="350" src="https://user-images.githubusercontent.com/42079541/215991733-24545882-e0b1-450d-afca-48dea7570139.png"/></div>
-After crop chessboard,save pcd like cropped_1.pcd,cropped_2.pcd,cropped_3.pcd...(**PS:Start from 1**)
+
+After crop chessboard,save pcd as cropped_1.pcd,cropped_2.pcd,cropped_3.pcd...
+(**PS:Start from 1**)
 
 
 The rotation vetor and translation vetor and rotation matrix between cam and lidar would be print in terminal:
