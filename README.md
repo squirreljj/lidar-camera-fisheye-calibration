@@ -15,5 +15,4 @@ below is reprojection result:
 
 
 ![image](https://user-images.githubusercontent.com/42079541/215654599-92a5e60d-8b7d-437f-8c54-6d151bbc3eaa.png)
-![image](https://user-images.githubusercontent.com/42079541/215656758-37db25f5-d28c-4bae-9816-c29b12055792.png)
-
+![calib](https://user-images.githubusercontent.com/77578976/215968819-7a99723a-34ed-45b8-8942-47c9c9038d72.png)

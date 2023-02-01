@@ -98,13 +98,18 @@ if __name__ == "__main__":
     f1.sort()
     f2 = os.listdir("D:/fisheye+disparity2pointcloud/calib_data/pcd/")
     f2.sort()
+    cropped_flag=False
+    num=1        #adjust the time you need to crop the pointcloud
+    #set True to edit the pointcloud,and please save the cropped point cloud as .pcd format!
     for i in range(len(f1)):
         img_path = "D:/fisheye+disparity2pointcloud/calib_data/img/" + f1[i]
         pcd_path = "D:/fisheye+disparity2pointcloud/calib_data/pcd/" + f2[i]
         img=cv2.imread(img_path)
         # 主要功能是截取点云
-        pcd = o3d.io.read_point_cloud(pcd_path)
-        o3d.visualization.draw_geometries_with_editing([pcd])
+        if cropped_flag==True:
+            for a in range(num):
+                pcd = o3d.io.read_point_cloud(pcd_path)#if multi crop is chosen,save pointcloud as origin name  before the last cut out ,save it as crop1.pcd/crop2.pcd... at the last cut out 
+                o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
         lidar_path = r"D:\fisheye+disparity2pointcloud\crop" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
