@@ -74,7 +74,7 @@ def project_p(path, img, rvecs, tvecs):
         #     i += 1
         #     continue
 
-        # todo 为什么这个对显示效果影响这么大？？？
+        
         if int(e[0][0]) > img.shape[1] or int(e[0][1]) > img.shape[0] or int(e[0][0])<0 or int(e[0][1])<0:
             continue
 
