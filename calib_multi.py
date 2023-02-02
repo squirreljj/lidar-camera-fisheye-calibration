@@ -191,9 +191,22 @@ if __name__ == "__main__":
         else:
             print('未找到角点')
         # 提取图片中标定板的中心点
+    
     rr, tt = calib()
-    for i in range(len(f1)):
-        img_path = img_dir + f1[i]
-        test_lidar_path = pcd_dir + f2[i]
-        test_img = cv2.imread(img_path)
-        project_p(test_lidar_path, test_img, rr, tt,f1[i])
+    #微调功能
+    flag=1
+    while(flag):
+        flag = float(input("continue to fine tuning(1:yes,0:no) :"))
+        rx = float(input("please enter the rx: "))
+        ry = float(input("please enter the ry: "))
+        rz = float(input("please enter the rz: "))
+        x = float(input("please enter the x: "))
+        y = float(input("please enter the y: "))
+        z = float(input("please enter the z: "))
+        rr = np.array([[rx],[ry],[rz]])
+        tt = np.array([[x],[y],[z]])
+        for i in range(len(f1)):
+            img_path = img_dir + f1[i]
+            test_lidar_path = pcd_dir + f2[i]
+            test_img = cv2.imread(img_path)
+            project_p(test_lidar_path, test_img, rr, tt,f1[i])
