@@ -61,8 +61,8 @@ def project_p(path, img, rvecs, tvecs,name):
     pc_as_np = np.asarray(point_cloud.points)
     #pc_as_np = pc_as_np[pc_as_np[:, 2] > 0.]
 
-    print(pc_as_np.shape)
-    print(pc_as_np.dtype)
+    #print(pc_as_np.shape)
+    #print(pc_as_np.dtype)
 
 
 
