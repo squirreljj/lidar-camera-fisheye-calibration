@@ -29,8 +29,8 @@ def calib():
                                                                   flags=cv2.SOLVEPNP_EPNP)
     # (success, rotation_vector, translation_vector) = cv2.solvePnP(points3, points2, camera_matrix,dist_coeffs)
 
-    #print("Rotation Vector:\n {0}".format(rotation_vector))
-    #print("Translation Vector:\n {0}".format(translation_vector))
+    print("Rotation Vector:\n {0}".format(rotation_vector))
+    print("Translation Vector:\n {0}".format(translation_vector))
 
     rotM = cv2.Rodrigues(rotation_vector)[0]
     position = -np.matrix(rotM).T * np.matrix(translation_vector)
