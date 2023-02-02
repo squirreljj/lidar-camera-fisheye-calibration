@@ -35,7 +35,7 @@ def calib():
     rotM = cv2.Rodrigues(rotation_vector)[0]
     position = -np.matrix(rotM).T * np.matrix(translation_vector)
     print(rotM)
-    print(rotM.T)
+    print("Lidar to camera rotation:",rotM.T)
     print(position)
     # print("file Vector:\n {0}".format(-np.matrix(rotM).T * np.matrix(translation_vector)))
 
