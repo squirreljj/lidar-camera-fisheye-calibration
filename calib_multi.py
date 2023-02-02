@@ -128,6 +128,8 @@ if __name__ == "__main__":
     f1.sort()
     f2 = os.listdir(pcd_dir)
     f2.sort()
+    if os.path.isdir(res_dir) == False:
+        os.mkdir(res_dir)
     cropped_flag = False # set True to edit the pointcloud,and please save the cropped point cloud as .pcd format!
     for i in range(len(f1)):
         img_path = img_dir + f1[i]
@@ -145,7 +147,7 @@ if __name__ == "__main__":
             pcd = o3d.io.read_point_cloud(pcd_path)
             o3d.visualization.draw_geometries_with_editing([pcd])
         #加载截取后的点云
-        lidar_path = crop_pcd_dir+"crop" + str(i+1) + ".pcd"
+        lidar_path = crop_pcd_dir+"cropped_" + str(i+1) + ".pcd"
         print("->正在加载点云... ")
         point_cloud = o3d.io.read_point_cloud(lidar_path)
         pc_as_np = np.asarray(point_cloud.points)
