@@ -21,12 +21,12 @@ Change the number of feature point at code :for i in range(4):
 ## 2)calib_multi.py
 
 Image should be save as: 
-> your_path/lidar_camera_calib/calib_data/img/
+> your_path/img/
 <div align=center><img width="800" height="200" src="https://user-images.githubusercontent.com/42079541/215990850-e83d1986-8e44-44ac-8912-83ab1fb511eb.png"/></div>
 
 
 Pcd should be save as: 
-> your_path/lidar_camera_calib/calib_data/pcd/
+> your_path/pcd/
 <div align=center><img width="700" height="250" src="https://user-images.githubusercontent.com/42079541/215990902-d05b2782-b907-4fb3-ad82-fcf2e87d6ae1.png"/></div>
 
 Set `cropped_flag = True`if your pointcloud haven't been processed,and then you can crop chessboard in pointcloud.
