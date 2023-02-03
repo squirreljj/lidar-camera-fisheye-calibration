@@ -4,7 +4,6 @@ import cv2
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QDoubleSpinBox)
-np.set_printoptions(suppress=True)
 import numpy as np
 # import glob
 import open3d as o3d
