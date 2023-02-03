@@ -1,6 +1,10 @@
 # coding:utf-8
 import os
 import cv2
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QLabel, QDoubleSpinBox)
+np.set_printoptions(suppress=True)
 import numpy as np
 # import glob
 import open3d as o3d
@@ -11,6 +15,158 @@ import math
 img_points = []
 lidar_points = []
 
+global rx;global ry;global rz;global x;global y;global z
+class DemoDoubleSpinBox(QMainWindow):
+    def __init__(self, parent=None):
+        super(DemoDoubleSpinBox, self).__init__(parent)
+
+        # 设置窗口标题
+        self.setWindowTitle('fune tuning')
+        # 设置窗口大小
+        self.resize(400, 300)
+
+        # rx
+        label_default = QLabel('rx', self)
+        label_default.setGeometry(10, 10, 80, 24)
+        label_default.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_default = QDoubleSpinBox(self)
+        #self.sb_default.setValue(rx)
+        self.sb_default.setRange(-4, 4)
+        self.sb_default.setGeometry(100, 10, 160, 24)
+        self.sb_default.setDecimals(2)
+        self.sb_default.setSingleStep(0.01)
+        self.sb_default.valueChanged.connect(self.defaultSpinBoxValueChanged)
+
+        # ry
+        label_prefix = QLabel('ry', self)
+        label_prefix.setGeometry(10, 50, 80, 26)
+        label_prefix.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_prefix = QDoubleSpinBox(self)
+        #self.sb_prefix.setValue(ry)
+        self.sb_prefix.setRange(-4, 4)
+        self.sb_prefix.setGeometry(100, 50, 160, 26)
+        self.sb_prefix.setDecimals(2)
+        self.sb_prefix.setSingleStep(0.01)
+        self.sb_prefix.valueChanged.connect(self.prefixSpinBoxTextChanged)
+
+        # rz
+        label_suffix = QLabel('rz', self)
+        label_suffix.setGeometry(10, 90, 80, 26)
+        label_suffix.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_suffix = QDoubleSpinBox(self)
+        #self.sb_suffix.setValue(rz)
+        self.sb_suffix.setRange(-4, 4)
+        self.sb_suffix.setGeometry(100, 90, 160, 26)
+        self.sb_suffix.setDecimals(2)
+        self.sb_suffix.setSingleStep(0.01)
+        self.sb_suffix.valueChanged.connect(self.suffixSpinBoxTextChanged)
+
+        # x
+        label_x = QLabel('x', self)
+        label_x.setGeometry(10, 130, 80, 26)
+        label_x.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_x = QDoubleSpinBox(self)
+        #self.sb_x.setValue(x)
+        self.sb_x.setRange(-4, 4)
+        self.sb_x.setGeometry(100, 130, 160, 26)
+        self.sb_x.setDecimals(2)
+        self.sb_x.setSingleStep(0.01)
+        self.sb_x.valueChanged.connect(self.xSpinBoxValueChanged)
+
+        # y
+        label_y = QLabel('y', self)
+        label_y.setGeometry(10, 170, 80, 26)
+        label_y.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_y = QDoubleSpinBox(self)
+        #self.sb_y.setValue(y)
+        self.sb_y.setRange(-4, 4)
+        self.sb_y.setGeometry(100, 170, 160, 26)
+        self.sb_y.setDecimals(2)
+        self.sb_y.setSingleStep(0.01)
+        self.sb_y.valueChanged.connect(self.ySpinBoxTextChanged)
+
+        # z
+        label_z = QLabel('z', self)
+        label_z.setGeometry(10, 210, 80, 26)
+        label_z.setAlignment(QtCore.Qt.AlignRight)
+        self.sb_z = QDoubleSpinBox(self)
+        #self.sb_z.setValue(z)
+        self.sb_z.setRange(-4,4)
+        self.sb_z.setGeometry(100, 210, 160, 26)
+        self.sb_z.setDecimals(2)
+        self.sb_z.setSingleStep(0.01)
+        self.sb_z.valueChanged.connect(self.zSpinBoxTextChanged)
+
+        # 信息显示
+        self.label_value = QLabel(self)
+        self.label_value.setGeometry(10, 240, 280, 30)
+
+    def defaultSpinBoxValueChanged(self, a0):
+        self.label_value.setText('current value is:' + str(a0))
+        rx = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
+        test_img = cv2.imread(img_path)
+        '''for i in range(len(f1)):
+            img_path = img_dir + f1[i]
+            test_lidar_path = pcd_dir + f2[i]
+            test_img = cv2.imread(img_path)
+            project_p(test_lidar_path, test_img, rr, tt, f1[i])'''
+    def prefixSpinBoxTextChanged(self, a0):
+        self.label_value.setText('current text is:' + str(a0))
+        ry = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
+    def suffixSpinBoxTextChanged(self, a0):
+        self.label_value.setText('current text is:' + str(a0))
+        rz = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
+    def xSpinBoxValueChanged(self, a0):
+        self.label_value.setText('current value is:' + str(a0))
+        x = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
+    def ySpinBoxTextChanged(self, a0):
+        self.label_value.setText('current text is:' + str(a0))
+        y = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
+    def zSpinBoxTextChanged(self, a0):
+        self.label_value.setText('current text is:' + str(a0))
+        z = a0
+        #print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        rr = np.array([[rx], [ry], [rz]])
+        tt = np.array([[x], [y], [z]])
+        img_path = img_dir + f1[0]
+        test_lidar_path = pcd_dir + f2[0]
+        test_img = cv2.imread(img_path)
+        project_p(test_lidar_path, test_img, rr, tt, f1[0])
 def calib():
     # !!!!这里要把参数替换为你自己的相机的内参矩阵
 
@@ -210,3 +366,17 @@ if __name__ == "__main__":
             test_lidar_path = pcd_dir + f2[i]
             test_img = cv2.imread(img_path)
             project_p(test_lidar_path, test_img, rr, tt,f1[i])
+        '''
+        flag = bool(input("continue to fine tuning(True/False) :"))
+        rx=float(rr[0])
+        ry=float(rr[1])
+        rz=float(rr[2])
+        x=float(tt[0])
+        y=float(tt[1])
+        z=float(tt[2])
+        print(str(rx) + " " + str(ry) + " " + str(rz) + " " + str(x) + " " + str(y) + " " + str(z))
+        if(flag):
+            app = QApplication(sys.argv)
+            window = DemoDoubleSpinBox()
+            window.show()
+            sys.exit(app.exec())'''
