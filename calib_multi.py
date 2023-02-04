@@ -216,6 +216,16 @@ def calib():
     return rotation_vector, translation_vector
 def project_p_kb4(path, img, rvecs, tvecs,name):
     point_cloud = o3d.io.read_point_cloud(path)
+    T = np.eye(4)
+    print(rvecs)
+    print(tvecs)
+    T[:3, :3] = point_cloud.get_rotation_matrix_from_yxz((rvecs[0], rvecs[1], rvecs[2]))
+    T[0, 3] = tvecs[0]
+    T[1, 3] = tvecs[1]
+    T[2, 3] = tvecs[2]
+    T = np.matrix(T)
+    # 将全局点云转到雷达坐标系
+    point_cloud = point_cloud.transform(T)
     points = np.array(point_cloud.points)  # 转为矩阵
     for i in points:
         #print(i[0])
