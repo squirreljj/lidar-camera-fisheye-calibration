@@ -214,7 +214,62 @@ def calib():
     # print("file Vector:\n {0}".format(-np.matrix(rotM).T * np.matrix(translation_vector)))
 
     return rotation_vector, translation_vector
-
+def project_p_kb4(path, img, rvecs, tvecs,name):
+    point_cloud = o3d.io.read_point_cloud(path)
+    points = np.array(point_cloud.points)  # 转为矩阵
+    for i in points:
+        #print(i[0])
+        #print(math.sqrt(i[0]*i[0]+i[1]*i[1]+i[2]*i[2]))
+        theta = math.acos(i[2] / math.sqrt(i[0]*i[0]+i[1]*i[1]+i[2]*i[2]));
+        #print(theta)
+        phi = math.atan2(i[1], i[0]);
+        #print(phi)
+        k2 = -0.017815017122891635;
+        k3 = 0.004393633105569032;
+        k4 = -0.003294336117104848;
+        k5 = 0.0003341737432437223;
+        p_u = float(theta +k2 * theta * theta * theta +k3 * theta * theta * theta * theta * theta +k4 * theta * theta * theta * theta * theta * theta * theta +k5 * theta * theta * theta * theta * theta * theta * theta * theta * theta)*math.cos(phi)
+        p_v = float(theta + k2 * theta * theta * theta + k3 * theta * theta * theta * theta * theta + k4 * theta * theta * theta * theta * theta * theta * theta + k5 * theta * theta * theta * theta * theta * theta * theta * theta * theta) * math.sin(phi)
+        u=float(324.26866659048076 * p_u + 556.6442852135398)
+        v=float(323.68590505444868* p_v +  561.926198367122)
+        if int(u) > img.shape[1] or int(v) > img.shape[0] or int(u)<0 or int(v)<0:
+            continue
+        distance = float(math.sqrt(i[0] * i[0] + i[1] * i[1] + i[2] * i[2]))
+        inc = 6.0 / 10;
+        x = distance * inc;
+        r = 0.0;
+        g = 0.0;
+        b = 0.0
+        if ((0 <= x and x <= 1) or (5 <= x and x <= 6)):
+            r = 1.0
+        elif (4 <= x and x <= 5):
+            r = x - 4
+        elif (1 <= x and x <= 2):
+            r = 1.0 - (x - 1)
+        if (1 <= x and x <= 3):
+            g = 1.0
+        elif (0 <= x and x <= 1):
+            g = x - 0
+        elif (3 <= x and x <= 4):
+            g = 1.0 - (x - 3)
+        if (3 <= x and x <= 5):
+            b = 1.0
+        elif (2 <= x and x <= 3):
+            b = x - 2;
+        elif (5 <= x and x <= 6):
+            b = 1.0 - (x - 5)
+        r *= 255.0
+        g *= 255.0
+        b *= 255.0
+        img = cv2.circle(img, center=(int(u), int(v)),
+                         radius=1,
+                         # color=(205, 0, 0),
+                         color=(int(r), int(g), int(b)),
+                         # color=(int(points[i,3]), int(points[i,3]), 0),
+                         # color=(int(pc_as_np[i][0]), int(pc_as_np[i][1]), int(pc_as_np[i][2])),
+                         thickness=-1)
+    cv2.imshow('line0', img)
+    cv2.waitKey(0)
 def project_p(path, img, rvecs, tvecs,name):
     """
 
